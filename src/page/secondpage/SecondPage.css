@@ -36,6 +36,7 @@
   padding: 20px;
   position: relative;
   margin-bottom: 20px;
+  cursor: pointer;
 }
 
 .card-content {
@@ -85,4 +86,8 @@
 
 .checkout-button:hover {
   background-color: #0056b3;
+}
+
+.selected-card{
+  border: 2px solid yellow;
 }

@@ -1,43 +1,100 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './SecondPage.css'; 
-
+import { axiosInstance } from '../../api.ts';
+// import Gateways from "payment-p2epl";
+import {Gateways} from 'ks-pay-package-pvt'
 const productData = [
   {
     id: 1,
     name: 'Product A',
-    prices: {
-      USD: { symbol: '$', price: 100 },
-      EUR: { symbol: '€', price: 90 },
-      GBP: { symbol: '£', price: 80 },
-      INR: { symbol: '₹', price: 7500 },
-      JPY: { symbol: '¥', price: 11000 },
-    },
+    prices: 200,
   },
   {
     id: 2,
     name: 'Product B',
-    prices: {
-      USD: { symbol: '$', price: 150 },
-      EUR: { symbol: '€', price: 135 },
-      GBP: { symbol: '£', price: 120 },
-      INR: { symbol: '₹', price: 11000 },
-      JPY: { symbol: '¥', price: 16500 },
-    },
+    prices: 100,
   },
 ];
 
 const SecondPage = () => {
-  const [selectedCurrency, setSelectedCurrency] = useState('USD'); 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(''); 
+  console.log({Gateways})
+  const [selectedCurrency, setSelectedCurrency] = useState(null); 
+  const [allCurrency, setCurrency] = useState([]); 
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null); 
+  const [allPaymentMethod, setAllPaymentMethod] = useState([]); 
+  const[selectedProduct,setSelectedroduct]=useState(null)
+  const[sign,setSign]=useState('')
+
+
+  // const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(''); 
   const [cardDetails, setCardDetails] = useState({
     cardNumber: '',
     expiryDate: '',
     cvv: '',
     cardHolder: '',
   }); 
+  const getCurrecny=async ()=>{
+    try{
+
+      let res= await axiosInstance.get('/currencies')
+      // console.log({res})
+      if(res?.status==200)
+      setCurrency(res?.data?.result)
+    setSelectedCurrency(res?.data?.result[0])
+    }catch(e){
+      console.log(e)
+    }
+
+  }
+  const getMethod=async ()=>{
+    try{
+
+      let res= await axiosInstance.get(`/${selectedCurrency?.id}/payment-methods`)
+      // console.log({res})
+      if(res?.status==200)
+        setAllPaymentMethod(res?.data?.result)
+      // setSelectedPaymentMethod(res?.data?.result[0])
+    }catch(e){
+      console.log(e)
+    }
+
+  }
+  const getSignature=async ()=>{
+    let payload={
+      "accessKey": localStorage.getItem('publicKey'),
+       "secretKey": localStorage.getItem('secretKey')
+   }
+    try{
+
+      let res= await axiosInstance.post(`auth/generate-signature/${localStorage.getItem('appId')}`,payload)
+      console.log({res})
+      
+      
+
+        setSign(res?.data?.result)
+    
+        // setAllPaymentMethod(res?.data?.result)
+      // setSelectedPaymentMethod(res?.data?.result[0])
+    }catch(e){
+      console.log(e)
+    }
+
+  }
+
+  useEffect(()=>{
+    getCurrecny()
+  },[])
+  useEffect(()=>{
+    if(selectedCurrency){
+      getMethod()
+    }
+    // console.log({selectedCurrency})
+  },[selectedCurrency])
 
   const handleCurrencyChange = (e) => {
-    setSelectedCurrency(e.target.value);
+    // console.log(e?.target?.value)
+    let value=JSON.parse(e?.target?.value)
+    setSelectedCurrency(value);
   };
 
   const handlePaymentMethodChange = (e) => {
@@ -49,14 +106,66 @@ const SecondPage = () => {
   };
 
   const handleCheckout = () => {
-    if (selectedPaymentMethod === 'Card') {
+    if (selectedPaymentMethod && selectedCurrency &&selectedProduct) {
       
-      alert(`Checkout initiated with card: ${cardDetails.cardNumber}`);
+      // alert(`Checkout initiated with card: ${cardDetails.cardNumber}`);
+      getSignature()
     } else {
-      alert('Please select a payment method and fill out the details.');
+      alert('Please select all details.');
     }
   };
+  // const payload = {
+  //   referenceNumber: "REFRENCE_NUMBER",
+  //   amount: "AMOUNT",
+  //   currencyId: "CURRENCY_ID",
+  //   paymentMethodId: "PAYMENT_METHOD_ID"
+  // };
 
+  // const headers = {
+  //   x-signature: "YOUR_APP_SIGNATURE",
+  //   environment: "URL"
+  // };
+
+  // const transactionStatusCallback = (payload) => {
+  //   setTransactionPayload(payload);
+  // };
+  const payload = {
+    referenceNumber: generateRandomString(),
+    amount: Number(selectedProduct),
+    currencyId: selectedCurrency?.id,
+    paymentMethodId: selectedPaymentMethod ,
+  };
+
+  function generateRandomString(length = 16) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters[randomIndex];
+    }
+    return result;
+  }
+  const transactionStatusCallback = (payload) => {
+    console.log('payload ::: from main call back', payload);
+    window.location.href='/'
+  };
+
+  const getEnvironmentUrl = (env) => {
+    const baseUrls = {
+      local: 'http://localhost:8002',
+      qa: 'https://qa-ks-pay-openapi.p2eppl.com',
+      dev: 'https://dev-ks-pay-openapi.p2eppl.com',
+      SANDBOX: 'https://stg-ks-pay-sandboxapi.p2eppl.com',
+      LIVE: 'https://stg-ks-pay-liveapi.p2eppl.com',
+
+    };
+    return baseUrls[env];
+  };
+const headers = {
+  "content-type": "application/json",
+  "x-signature": sign,
+  environment_url: getEnvironmentUrl('dev')
+};
   return (
     <div className="container">
       <h1>Checkout Page</h1>
@@ -65,9 +174,9 @@ const SecondPage = () => {
       <div className="dropdown-container">
         <label htmlFor="currency">Select Currency: </label>
         <select id="currency" value={selectedCurrency} onChange={handleCurrencyChange} className="dropdown">
-          {Object.keys(productData[0].prices).map((currency) => (
-            <option key={currency} value={currency}>
-              {currency}
+          {allCurrency.map((currency) => (
+            <option key={currency} value={JSON.stringify(currency)}>
+              {currency?.name}
             </option>
           ))}
         </select>
@@ -76,12 +185,12 @@ const SecondPage = () => {
     
       <div className="cards-container">
         {productData.map((product) => (
-          <div key={product.id} className="card">
+          <div key={product.id} onClick={()=>setSelectedroduct(product?.prices)} className={`card ${selectedProduct===product?.prices && 'selected-card'}`}>
             <div className="card-content">
               <h2 className="product-name">{product.name}</h2>
               <p className="price">
-                Price: {product.prices[selectedCurrency].symbol}
-                {product.prices[selectedCurrency].price}
+                Price: {selectedCurrency?.symbol}
+                {product?.prices}
               </p>
             </div>
           </div>
@@ -92,12 +201,18 @@ const SecondPage = () => {
         <label>Select Payment Method: </label>
         <select value={selectedPaymentMethod} onChange={handlePaymentMethodChange} className="payment-method-dropdown">
           <option value="">-- Select Payment Method --</option>
-          <option value="Card">Card</option>
+          {
+            allPaymentMethod.map((method,index)=>
+              <option key={method?.id} value={method?.id}>{method?.name}</option>
+            )
+          }
         </select>
       </div>
 
+
+
       
-      {selectedPaymentMethod === 'Card' && (
+      {/* {selectedPaymentMethod === 'Card' && (
         <div className="card-form">
           <h3>Enter Card Details:</h3>
           <input
@@ -129,12 +244,18 @@ const SecondPage = () => {
             onChange={handleCardDetailChange}
           />
         </div>
-      )}
+      )} */}
 
     
       <button onClick={handleCheckout} className="checkout-button">
         Checkout
       </button>
+      {sign? <div>hello</div>:<div>bye</div>}
+     
+
+      {
+        sign && <Gateways  payload={payload} headers={headers} transactionStatusCallback={transactionStatusCallback}/>
+      }
     </div>
   );
 };

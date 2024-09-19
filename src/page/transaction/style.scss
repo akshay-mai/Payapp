@@ -1,0 +1,27 @@
+// @import "src/styles/variables";
+
+.main-transaction-container {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  padding: 20px;
+}
+.trans-id-text{
+  width: 120px;
+}
+.date-time-container {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+}
+
+.date-text {
+  font-size: 14px;
+}
+
+.time-text {
+  font-size: 14px;
+  color: gray;
+}
+
