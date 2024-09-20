@@ -168,7 +168,7 @@ const SecondPage = () => {
 const headers = {
   "content-type": "application/json",
   "x-signature": sign,
-  environment_url: getEnvironmentUrl(localStorage.getItem('env'))
+  environment:localStorage.getItem('env')
 };
   return (
     <div className="container">

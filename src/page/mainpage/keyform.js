@@ -1,14 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import "./main.css";
 import axios from 'axios';
 // import { axiosInstance } from '../../api';
 
 const KeyForm = () => {
+  const url = new URL(window.location.href);
+
+    // Get the search parameters
+    const params = new URLSearchParams(url.search);
+    
+    // Access individual parameters
+    const param1 = params.get('txnId'); // "value1"
+    // const param2 = JSON.parse(param1) // "value2"
+    if(param1){
+     window.location.href=`/success?payload=${JSON.stringify({txnId:params.get('txnId'),status:'Pending'})}`
+    }
+    
+    // console.log(param2);
   const [publicKey, setPublicKey] = React.useState('');
   const [secretKey, setSecretKey] = React.useState('');
   const [appId, setAppId] = React.useState('');
   const [env, setEnv] = React.useState('');
+  // const navigate=useNavigate()
+
+  
 
 
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
