@@ -1,0 +1,63 @@
+@import 'src/styles/variables';
+
+.form-input {
+  position: relative;
+}
+.form-input label   {
+  display: flex;
+  font-size: 16px;
+  color: $grey-2;
+  font-family: "Source Sans Pro Medium";
+  margin-bottom: 5px;
+}
+.form-input input {
+  font-size: 14px;
+  height: 56px;
+  width: 100%;
+  min-width: 400px;
+  max-width: 400px;
+  border: 1px solid $grey-3;
+  border-radius: 8px;
+  padding: 20px;
+  color: $grey-2;
+
+  &:focus-visible {
+    outline: none;
+  }
+  &::placeholder {
+    color: $grey-5;
+  }
+}
+.form-input textarea.main {
+  min-width: 400px;
+  max-width: 400px;
+  min-height: 90px;
+  border-radius: 8px;
+  border: 1px solid $grey-3;
+  padding: 20px;
+  font-size: 14px;
+
+  &::placeholder {
+    font-size: 14px;
+    color: $grey-5;
+  }
+  &:focus-visible {
+    outline: none;
+  }
+}
+.error-wrapper {
+  margin-bottom: 0;
+  display: flex;
+  color: $red-2;
+  font-family: "Clear Sans";
+  font-size: 14px;
+}
+.error-input > input {
+  border-color: $red-2;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+}

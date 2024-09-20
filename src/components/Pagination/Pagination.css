@@ -1,0 +1,55 @@
+.pagination {
+  gap: 10px;
+}
+
+.pagination .page-item {
+  /* Add any specific styles for page-item if needed */
+}
+
+.pagination .page-item .page-link {
+  border-style: unset;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  border-radius: 5px;
+}
+
+.page-link.active,
+.active > .page-link {
+  border-radius: 5px;
+  border-style: unset;
+  cursor: pointer;
+  color: white;
+}
+
+.active > .page-link:hover {
+  /* Add hover styles if needed */
+}
+
+.page-link.disabled,
+.disabled > .page-link {
+  border-radius: 5px;
+}
+
+.page-link {
+  padding: 7px 15px;
+  color: #06152b;
+  font-size: 16px;
+}
+
+.page-link:focus {
+  z-index: 1;
+  outline: 0;
+  border-radius: 5px;
+  box-shadow: unset;
+}
+
+.page-link:hover {
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.page-item:not(:first-child) .page-link {
+  border-radius: 5px;
+}

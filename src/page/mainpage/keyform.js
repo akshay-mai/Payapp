@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import "./main.css";
 import axios from 'axios';
-import { axiosInstance } from '../../api.ts';
+// import { axiosInstance } from '../../api';
 
 const KeyForm = () => {
-  const [publicKey, setPublicKey] = useState('');
-  const [secretKey, setSecretKey] = useState('');
-  const [appId, setAppId] = useState('');
-  const [env, setEnv] = useState('');
+  const [publicKey, setPublicKey] = React.useState('');
+  const [secretKey, setSecretKey] = React.useState('');
+  const [appId, setAppId] = React.useState('');
+  const [env, setEnv] = React.useState('');
 
 
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
   const navigate = useNavigate(); 
 
   const handlePublicKeyChange = (e) => {
@@ -55,6 +55,8 @@ const KeyForm = () => {
       localStorage.setItem('appId',appId)
       localStorage.setItem('publicKey',publicKey)
       localStorage.setItem('secretKey',secretKey)
+      localStorage.setItem('env',env)
+
 
 
       navigate('/secondpage');
@@ -109,10 +111,10 @@ const KeyForm = () => {
         <label htmlFor="appId">Envorment</label>
         <select onChange={handleChange}>
         <option value=''>Select</option>
-          <option value='DEV'>DEV</option>
-          <option value='QA'>QA</option>
-          <option value='STAGE_SANDBOX'>STAGGE SANDBOX</option>
-          <option value='STAGE_LIVE'>STAGE LIVE</option>
+          <option value='dev'>DEV</option>
+          <option value='qa'>QA</option>
+          <option value='SANDBOX'>STAGGE SANDBOX</option>
+          <option value='LIVE'>STAGE LIVE</option>
 
 
         </select>

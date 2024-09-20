@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './SecondPage.css'; 
-import { axiosInstance } from '../../api.ts';
+import { axiosInstance } from '../../api';
 // import Gateways from "payment-p2epl";
-import {Gateways} from 'ks-pay-package-pvt'
+import Gateways from 'ks-pay-package-pvt'
+import { useNavigate } from 'react-router-dom';
 const productData = [
   {
     id: 1,
@@ -18,16 +19,17 @@ const productData = [
 
 const SecondPage = () => {
   console.log({Gateways})
-  const [selectedCurrency, setSelectedCurrency] = useState(null); 
-  const [allCurrency, setCurrency] = useState([]); 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null); 
-  const [allPaymentMethod, setAllPaymentMethod] = useState([]); 
-  const[selectedProduct,setSelectedroduct]=useState(null)
-  const[sign,setSign]=useState('')
+  const [selectedCurrency, setSelectedCurrency] = React.useState(null); 
+  const [allCurrency, setCurrency] = React.useState([]); 
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState(null); 
+  const [allPaymentMethod, setAllPaymentMethod] = React.useState([]); 
+  const[selectedProduct,setSelectedroduct]=React.useState(null)
+  const[sign,setSign]=React.useState('')
+  const navigate=useNavigate()
 
 
-  // const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(''); 
-  const [cardDetails, setCardDetails] = useState({
+  // const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState(''); 
+  const [cardDetails, setCardDetails] = React.useState({
     cardNumber: '',
     expiryDate: '',
     cvv: '',
@@ -81,14 +83,14 @@ const SecondPage = () => {
 
   }
 
-  useEffect(()=>{
+  React.useEffect(()=>{
     getCurrecny()
   },[])
-  useEffect(()=>{
+  React.useEffect(()=>{
     if(selectedCurrency){
       getMethod()
     }
-    // console.log({selectedCurrency})
+    console.log({selectedCurrency})
   },[selectedCurrency])
 
   const handleCurrencyChange = (e) => {
@@ -134,6 +136,7 @@ const SecondPage = () => {
     amount: Number(selectedProduct),
     currencyId: selectedCurrency?.id,
     paymentMethodId: selectedPaymentMethod ,
+    // redirect_url:'local'
   };
 
   function generateRandomString(length = 16) {
@@ -147,7 +150,8 @@ const SecondPage = () => {
   }
   const transactionStatusCallback = (payload) => {
     console.log('payload ::: from main call back', payload);
-    window.location.href='/'
+    navigate('/success',{state:payload})
+    window.location.href=`/success?payload=${JSON.stringify(payload)}`
   };
 
   const getEnvironmentUrl = (env) => {
@@ -164,7 +168,7 @@ const SecondPage = () => {
 const headers = {
   "content-type": "application/json",
   "x-signature": sign,
-  environment_url: getEnvironmentUrl('dev')
+  environment_url: getEnvironmentUrl(localStorage.getItem('env'))
 };
   return (
     <div className="container">
@@ -173,9 +177,10 @@ const headers = {
     
       <div className="dropdown-container">
         <label htmlFor="currency">Select Currency: </label>
-        <select id="currency" value={selectedCurrency} onChange={handleCurrencyChange} className="dropdown">
+        <select id="currency"  onChange={handleCurrencyChange} className="dropdown">
+      
           {allCurrency.map((currency) => (
-            <option key={currency} value={JSON.stringify(currency)}>
+            <option key={currency}  value={JSON.stringify(currency)}>
               {currency?.name}
             </option>
           ))}
@@ -188,7 +193,7 @@ const headers = {
           <div key={product.id} onClick={()=>setSelectedroduct(product?.prices)} className={`card ${selectedProduct===product?.prices && 'selected-card'}`}>
             <div className="card-content">
               <h2 className="product-name">{product.name}</h2>
-              <p className="price">
+              <p className="price" style={{color:'white'}}>
                 Price: {selectedCurrency?.symbol}
                 {product?.prices}
               </p>
@@ -250,11 +255,12 @@ const headers = {
       <button onClick={handleCheckout} className="checkout-button">
         Checkout
       </button>
-      {sign? <div>hello</div>:<div>bye</div>}
+      {/* {sign? <div>hello</div>:<div>bye</div>} */}
      
 
       {
-        sign && <Gateways  payload={payload} headers={headers} transactionStatusCallback={transactionStatusCallback}/>
+        // sign && React.createElement(Gateways,{payload:payload,headers:headers,transactionStatusCallback:transactionStatusCallback}) 
+        sign &&  <Gateways  payload={payload} headers={headers} transactionStatusCallback={transactionStatusCallback}/>
       }
     </div>
   );

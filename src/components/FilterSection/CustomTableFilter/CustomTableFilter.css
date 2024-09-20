@@ -1,0 +1,115 @@
+.custom-table-filter-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 13px;
+}
+
+.custom-table-filter-section .filter-wrapper {
+  display: flex;
+  width: 100%;
+}
+
+.custom-table-filter-section .search-input-main {
+  position: relative;
+}
+
+.custom-table-filter-section .search-input-main .search-input {
+  padding: 10px 1.5rem 10px 3rem;
+  background: white; /* Replace with the appropriate variable */
+  color: black;
+  opacity: 0.8;
+  border-radius: 6px;
+  border: 1px solid grey; /* Replace with the appropriate variable */
+  font-family: "Source Sans Pro";
+  font-size: 14px;
+  height: auto;
+  width: 400px;
+}
+
+.custom-table-filter-section .search-input-main .search-input:focus-visible {
+  outline: none;
+}
+
+.custom-table-filter-section .search-input-main .search-btn {
+  z-index: 1;
+  padding: 0 0.5rem;
+  position: absolute;
+  top: 8px;
+  left: 10px;
+}
+
+.custom-table-filter-section .search-input-main .cross-btn {
+  z-index: 1;
+  padding: 0 0.5rem;
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.custom-table-filter-section .status-text {
+  color: grey; /* Replace with the appropriate variable */
+  font-family: "Source Sans Pro";
+  font-size: 14px;
+  line-height: 120%;
+}
+
+.custom-table-filter-section .status-select {
+  border-radius: 6px;
+}
+
+.custom-table-filter-section .status-select .css-b62m3t-container .css-1glc60u-control {
+  height: 40px;
+}
+
+.custom-table-filter-section .status-select .css-b62m3t-container .css-zr71sc-control {
+  height: 40px;
+}
+
+.custom-table-filter-section .clear-btn {
+  font-family: "Source Sans Pro";
+  background: black; /* Replace with the appropriate variable */
+  color: white; /* Replace with the appropriate variable */
+  border-radius: 6px;
+  border: 1px solid grey; /* Replace with the appropriate variable */
+  font-size: 14px;
+  padding: 4px 10px;
+  margin-right: 12px;
+}
+
+.custom-table-filter-section .bulk-upload-btn {
+  white-space: nowrap;
+  margin-left: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 140px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid black; /* Replace with the appropriate variable */
+  background: white; /* Replace with the appropriate variable */
+  gap: 10px;
+}
+
+.custom-select .options-list {
+  border-radius: 6px;
+}
+
+@media only screen and (max-width: 768px) {
+  .custom-table-filter-section .filter-wrapper {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .custom-table-filter-section .filter-wrapper .search-input-main {
+    width: 100%;
+  }
+
+  .custom-table-filter-section .filter-wrapper .search-input-main .search-input {
+    width: 100%;
+  }
+}

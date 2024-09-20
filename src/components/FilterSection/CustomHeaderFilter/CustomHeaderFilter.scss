@@ -1,0 +1,65 @@
+@import "../../../styles/variables";
+
+.custom-header-filter-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 30px;
+
+  .filter-wrapper {
+    display: flex;
+    width: 100%;
+    .header-wrapper{
+      display: flex;
+      gap: 20px;
+      .time-rage-wrapper{
+        display: flex;
+    border-radius: 10px;
+    border: 1px solid #EFEFEF;
+    background: #FFF;
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.05);
+    padding: 10px 20px;
+    .label-timeRange{
+      font-size: 14px;
+    font-family: "Source Sans Pro Medium";
+    color: #404040;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+
+    }
+
+      }
+      .css-b62m3t-container{
+        width: 150px;
+        border: none;
+        .custom-select__control{
+          border: none !important;
+          height: fit-content !important;
+        }
+      }
+    }
+
+    .title {
+      color: $black;
+      font-family: "Source Sans Pro Bold";
+      font-size: 30px;
+      line-height: 120%;
+      white-space: nowrap;
+    }
+    .download-btn {
+      white-space: nowrap;
+      margin-left: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 140px;
+      height: 40px;
+      border-radius: 10px;
+      color: $white;
+      background: $black;
+      gap: 10px
+    }
+  }
+}

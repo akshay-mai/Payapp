@@ -1,0 +1,66 @@
+/* @import "src/styles/variables"; */
+
+.custom-select-main {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  .select-label {
+    font-size: 14px;
+    color: $grey-1;
+  }
+}
+.custom-select {
+  position: relative;
+  height: 50px;
+  border: 1px solid $grey-9;
+  background: $white;
+  width: 100%;
+  min-width: 150px;
+  border-radius: 10px;
+}
+
+.css-1glc60u-control {
+  border: 1px solid #E6E9EF;
+}
+.css-zr71sc-control {
+  border-color: #E6E9EF !important;
+  box-shadow: unset !important;
+}
+.css-1glc60u-control:hover {
+  border-color: #E6E9EF !important;
+}
+.css-1n6sfyn-MenuList {
+  padding: 14px 6px;
+}
+.css-1dimb5e-singleValue {
+  padding: 8px;
+  margin: 0;
+  font-size: 14px;
+  color: $grey-2;
+  font-family: "Source Sans Pro";
+}
+.css-1u9des2-indicatorSeparator {
+  display: none;
+}
+.css-1fdsijx-ValueContainer {
+  &:focus-visible {
+    outline: none;
+  }
+}
+.css-b62m3t-container:focus-visible {
+  outline: none !important;
+}
+.css-1w7iuus-option {
+  color: $grey-2;
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+.css-olqui2-singleValue {
+  font-size: 14px;
+  padding: 8px;
+}
+.css-894a34-indicatorSeparator {
+  display: none;
+}

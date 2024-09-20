@@ -1,0 +1,242 @@
+
+
+.form-group {
+  position: relative;
+}
+.form-group input {
+  width: 100%;
+  max-width: 400px;
+  min-width: 400px;
+  padding: 16px;
+  height: 56px;
+  color: #404040;
+  border: 1px solid #E6E9EF;
+  background: #ffff;
+  border-radius: 10px;
+  font-size: 16px;
+  font-family: "Source Sans Pro";
+  transition: border-color 0.3s ease;
+  &::-webkit-contacts-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+  }
+}
+
+.form-group input:focus {
+  border-color: #000;
+  outline: none;
+  .tooltip {
+    display: flex;
+  }
+}
+.form-group input:focus + label:focus {
+  top: -9px;
+  font-size: 12px;
+  color: #6e6464;
+  background-color: #ffff;
+  padding: 0 4px;
+  border-radius: 10px;
+  left: 15px;
+}
+.form-group input:not(:placeholder-shown) + label {
+  top: -9px;
+  font-size: 14px;
+  color: #6e6464;
+  background-color: #ffff;
+  padding: 0 4px;
+  left: 15px;
+}
+.form-group input:not(:placeholder-shown):focus + label {
+  color: #6e6464;
+}
+.error-wrapper {
+  display: flex;
+  color: #e61919;
+  font-size: 12px;
+}
+.error-input > input {
+  border-color: #e61919 !important;
+}
+.error-input {
+  border-color: #e61919 !important;
+}
+.error-input > input:not(:placeholder-shown) + label {
+  color: #6e6464;
+}
+.error-icon {
+  position: absolute;
+  right: 16px;
+  top: 6px;
+  cursor: pointer;
+}
+input:focus-visible {
+  outline: 0;
+}
+.input-postfix-text {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  color: #6e6464;
+  font-size: 14px;
+}
+.input-postfix-icon {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  cursor: pointer;
+}
+.hidden {
+  display: none;
+}
+.prefix-wrapper {
+  display: flex;
+  align-items: center;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  left: 10px;
+}
+.date-picker-main-container {
+  position: fixed;
+  min-width: 400px;
+  margin-top: -1rem;
+  .label {
+    width: 90px;
+    padding: 0 5px;
+    white-space: nowrap;
+    position: relative;
+    top: 12px;
+    left: 16px;
+    font-size: 14px;
+    color: #6e6464;
+    background: #ffff;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .react-datepicker-wrapper-btn{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    min-width: 300px;
+    padding: 16px;
+    height: 56px;
+    color: #191919;
+    border: 1px solid #D1D4D6;
+    background: #FFF;
+    border-radius: 10px;
+  }
+  .react-datepicker-wrapper {
+    visibility: hidden;
+    .react-datepicker__input-container {
+      position: relative;
+      input {
+        width: 100%;
+        max-width: 400px;
+        min-width: 400px;
+        padding: 16px;
+        height: 56px;
+        color: #191919;
+        border: 1px solid #D1D4D6;
+        background: #FFF;
+        border-radius: 10px;
+        font-size: 16px;
+        font-family: "Source Sans Pro";
+        transition: border-color 0.3s ease;
+      }
+      svg {
+        position: absolute;
+        right: 10px;
+        top: 12px;
+      }
+    }
+  }
+ 
+}
+
+@media screen and (min-width: 955px) and (max-width: 1140px) {
+  .date-picker-main-container {
+   
+    .react-datepicker-wrapper {
+      .react-datepicker__input-container {
+        input {
+          width: 100%;
+          font-size: 14px;
+          min-width: 300px;
+          max-width: 300px;
+        }
+      }
+    }
+    .react-datepicker__tab-loop {
+      .react-datepicker-popper {
+        .react-datepicker {
+          .react-datepicker__month-container {
+            .react-datepicker__header {
+              min-width: 275px !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 954px) {
+  .form-group {
+    width: 100%;
+  }
+  .form-group input {
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    font-size: 14px;
+  }
+  .form-group input:not(:placeholder-shown) + label {
+    font-size: 12px;
+  }
+  .date-picker-main-container {
+    
+    .label {
+      font-size: 12px;
+    }
+    .react-datepicker-wrapper {
+      width: 100%;
+      .react-datepicker__input-container {
+        input {
+          width: 100%;
+          font-size: 14px;
+          min-width: unset;
+          max-width: unset;
+        }
+      }
+    }
+    .react-datepicker__tab-loop {
+      .react-datepicker-popper {
+        left: 0 !important;
+        .react-datepicker {
+          .react-datepicker__month-container {
+            .react-datepicker__header {
+              min-width: unset !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.mobile{
+  padding-left: 4rem !important;
+}
+
+.label{
+  display: flex;
+  font-size: 16px;
+  color: #404040;
+  font-family: "Source Sans Pro Medium";
+  margin-bottom: 5px;
+}
