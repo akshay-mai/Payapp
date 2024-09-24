@@ -18,7 +18,7 @@ const productData = [
 ];
 
 const SecondPage = () => {
-  console.log({Gateways})
+  // console.log({Gateways})
   const [selectedCurrency, setSelectedCurrency] = React.useState(null); 
   const [allCurrency, setCurrency] = React.useState([]); 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState(null); 
@@ -69,7 +69,7 @@ const SecondPage = () => {
     try{
 
       let res= await axiosInstance.post(`auth/generate-signature/${localStorage.getItem('appId')}`,payload)
-      console.log({res})
+      // console.log({res})
       
       
 
@@ -90,7 +90,7 @@ const SecondPage = () => {
     if(selectedCurrency){
       getMethod()
     }
-    console.log({selectedCurrency})
+    // console.log({selectedCurrency})
   },[selectedCurrency])
 
   const handleCurrencyChange = (e) => {
@@ -149,7 +149,7 @@ const SecondPage = () => {
     return result;
   }
   const transactionStatusCallback = (payload) => {
-    console.log('payload ::: from main call back', payload);
+    // console.log('payload ::: from main call back', payload);
     navigate('/success',{state:payload})
     window.location.href=`/success?payload=${JSON.stringify(payload)}`
   };

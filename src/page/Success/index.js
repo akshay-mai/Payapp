@@ -16,7 +16,13 @@ export default function Success() {
   return (
 
     <div class="container">
-        <div class="success-icon">✔️</div>
+      {param2?.status==='PENDING'? <div class="pending-icon">⌛</div> :param2?.status==='SUCCESS'? <div class="success-icon">✔️</div>:<div class="failed-icon">⚠️</div>
+      }
+        {/* <div class="success-icon">✔️</div>
+        <div class="pending-icon">⌛</div>
+        <div class="failed-icon">⚠️</div> */}
+
+
         <h1>Transaction is {param2?.status} !</h1>
         {/* <p>Your transaction is {param2?.status}.</p> */}
         <a href="/" class="home-button" style={{marginBottom:'1rem'}}>Return to Home</a>

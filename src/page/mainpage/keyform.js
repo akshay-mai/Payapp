@@ -2,9 +2,29 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import "./main.css";
 import axios from 'axios';
+import { getStatusById } from '../../util';
 // import { axiosInstance } from '../../api';
 
 const KeyForm = () => {
+  const getStatus=async()=>{
+    try{
+
+      let res1=await getStatusById(params.get('txnId'))
+      console.log({res1})
+      if(res1){
+        window.location.href=`/success?payload=${JSON.stringify({txnId:params.get('txnId'),status:res1?.data?.result?.status})}`
+      }
+      
+    }catch(err){
+      console.log(err)
+    }
+
+    // console.log(res1)
+
+
+
+
+  }
   const url = new URL(window.location.href);
 
     // Get the search parameters
@@ -14,8 +34,16 @@ const KeyForm = () => {
     const param1 = params.get('txnId'); // "value1"
     // const param2 = JSON.parse(param1) // "value2"
     if(param1){
-     window.location.href=`/success?payload=${JSON.stringify({txnId:params.get('txnId'),status:'Pending'})}`
+  
+      
+getStatus()
+     
+      // console.log(res1)
+
+    //  window.location.href=`/success?payload=${JSON.stringify({txnId:params.get('txnId'),status:'Pending'})}`
     }
+
+   
     
     // console.log(param2);
   const [publicKey, setPublicKey] = React.useState('');
