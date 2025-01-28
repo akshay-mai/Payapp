@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import "./main.css";
 import axios from 'axios';
 import { getStatusById } from '../../util';
+import { Bounce, toast } from 'react-toastify';
 // import { axiosInstance } from '../../api';
 
 const KeyForm = () => {
@@ -82,6 +83,14 @@ getStatus()
   };
 
   const handleSubmit = async(e) => {
+    const url={
+      dev:process.env.REACT_APP_BASE_URL_DEV,
+      qa:process.env.REACT_APP_BASE_URL_QA,
+      SANDBOX:process.env.REACT_APP_BASE_URL_SANDBOX,
+      LIVE:process.env.REACT_APP_BASE_URL_LIVE,
+
+
+    }
     e.preventDefault();
 
     console.log('Public Key:', publicKey);
@@ -89,7 +98,7 @@ getStatus()
     console.log('App id:', appId);
     try{
 
-      let res=await axios.post(`${process.env.REACT_APP_BASE_URL}auth/generate-token/${appId}`,{
+      let res=await axios.post(`${url[env]}auth/generate-token/${appId}`,{
         "accessKey": publicKey,
          "secretKey": secretKey
          
@@ -105,8 +114,24 @@ getStatus()
 
       navigate('/secondpage');
 
-    }catch(e){
-      console.log(e)
+    }catch(error){
+
+      // console.log(e)
+      if(typeof error !=='string'){
+  
+        toast.error(error?.response?.data?.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+          // onClose:()=>window.location.reload()
+          });
+      }
     }
     
   };
@@ -121,7 +146,7 @@ getStatus()
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
+      <div className='mb-3'>
         <label htmlFor="publicKey">Public Key</label>
         <input
           type="text"
@@ -131,7 +156,7 @@ getStatus()
           required
         />
       </div>
-      <div>
+      <div className='mb-3'>
         <label htmlFor="secretKey">Secret Key</label>
         <input
           type="password"
@@ -141,19 +166,19 @@ getStatus()
           required
         />
       </div>
-      <div>
+      <div className='mb-3'>
         <label htmlFor="appId">App Id</label>
         <input
-          type="password"
-          id="secretKey"
+          type="text"
+          id="appId"
           value={appId}
           onChange={handleAppIdChange}
           required
         />
       </div>
-      <div>
-        <label htmlFor="appId">Envorment</label>
-        <select onChange={handleChange}>
+      <div className='mb-3'>
+        <label htmlFor="env">Envorment</label>
+        <select onChange={handleChange} id='env'>
         <option value=''>Select</option>
           <option value='dev'>DEV</option>
           <option value='qa'>QA</option>
@@ -170,7 +195,7 @@ getStatus()
           required
         /> */}
       </div>
-      <div>
+      <div className='mb-3'>
         <button type="submit" disabled={isButtonDisabled}>
           Submit
         </button>

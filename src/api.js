@@ -56,6 +56,7 @@ const createAxiosInstance = (baseURL) => {
               Authorization: refreshToken,
             };
             refreshingToken = true;
+            console.log({config})
             const res = await axios.post(
               `${process.env.REACT_APP_BASE_URL}auth/refresh-token`, {},
               { headers }
@@ -86,6 +87,7 @@ const createAxiosInstance = (baseURL) => {
   instance.interceptors.response.use(
     (response) => response,
     async (error) => {
+      console.log({error})
       const originalRequest = error.config;
 
       if (error?.response?.status === 401) {
@@ -96,11 +98,12 @@ const createAxiosInstance = (baseURL) => {
             isRefreshing = true;
 
             try {
+            // console.log({config})
               const response = await axios.post(
-                `${process.env.REACT_APP_BASE_URL}auth/refresh-token`, {},
+                getUrl(), {},
                 {
                   headers: {
-                    refresh_token: getRefreshToken(),
+                    Authorization: getRefreshToken(),
                     'Content-Type': 'application/json',
                   },
                 }
@@ -121,7 +124,7 @@ const createAxiosInstance = (baseURL) => {
             } catch (err) {
               isRefreshing = false;
               clearTokens();
-              window.location.href = `${process.env.REACT_APP_FRONTEND_URL}`;
+              window.location.href = window.location.origin;
               return Promise.reject(err);
             }
           } else {
@@ -136,6 +139,19 @@ const createAxiosInstance = (baseURL) => {
       } else if (error?.InvalidTokenError) {
         clearTokens();
         window.location.href = `${process.env.REACT_APP_FRONTEND_URL}`;
+      }else{
+        // toast.error(error?.response?.data?.message, {
+        //   position: "top-right",
+        //   autoClose: 5000000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        //   transition: Bounce,
+        //   onClose:()=>window.location.reload()
+        //   });
       }
       return Promise.reject(error);
     }
@@ -144,4 +160,26 @@ const createAxiosInstance = (baseURL) => {
   return instance;
 };
 
-export const axiosInstance = createAxiosInstance(process.env.REACT_APP_BASE_URL);
+export const axiosInstanceDEV = createAxiosInstance(process.env.REACT_APP_BASE_URL_DEV);
+export const axiosInstanceQA = createAxiosInstance(process.env.REACT_APP_BASE_URL_QA);
+export const axiosInstanceSANDBOX = createAxiosInstance(process.env.REACT_APP_BASE_URL_SANDBOX);
+export const axiosInstanceLIVE = createAxiosInstance(process.env.REACT_APP_BASE_URL_LIVE);
+
+
+function getUrl(){
+  let env=localStorage.getItem('env')
+  if(env==='LIVE'){
+    return `${process.env.REACT_APP_BASE_URL_LIVE}auth/refresh-token`
+
+  }else if(env==='qa'){
+    return `${process.env.REACT_APP_BASE_URL_QA}auth/refresh-token`
+
+  }else if(env==='dev'){
+    return `${process.env.REACT_APP_BASE_URL_DEV}auth/refresh-token`
+
+  }else if(env==='SANDBOX'){
+    return `${process.env.REACT_APP_BASE_URL_SANDBOX}auth/refresh-token`
+
+  }
+  // return localStorage.getItem('')
+}

@@ -6,6 +6,8 @@ import CustomTable from '../../components/CustomTable';
 import CustomTableFilter from '../../components/FilterSection/CustomTableFilter';
 import './Transaction.css';
 import { axiosInstance } from '../../api';
+import axios from 'axios';
+import { callApi } from '../../util';
 
 const TransactionOption = [
   { label: '-- All --', value: 'All' },
@@ -43,6 +45,15 @@ const Transaction = () => {
   };
 
   const fetchTransactions = async (paginationDetails, search, status, startDate, endDate, sortField = sortColumn, sortOrder = sortDirection.toUpperCase()) => {
+    const urlbase={
+      dev:process.env.REACT_APP_BASE_URL_DEV,
+      qa:process.env.REACT_APP_BASE_URL_QA,
+      SANDBOX:process.env.REACT_APP_BASE_URL_SANDBOX,
+      LIVE:process.env.REACT_APP_BASE_URL_LIVE,
+  
+  
+    }
+    const env=localStorage.getItem('env')
     const appId = localStorage.getItem('appId');
     
     if (!appId) {
@@ -55,7 +66,7 @@ const Transaction = () => {
     try {
       setIsLoading(true);
 
-      let url = `/transaction`;
+      let url = `transaction`;
 
       const queryParams = [];
       if (status && status !== 'All') queryParams.push(`status=${status.toUpperCase()}`);
@@ -68,7 +79,8 @@ const Transaction = () => {
 
       if (queryParams.length > 0) url += `?${queryParams.join('&')}`;
 
-      const response = await axiosInstance.get(url);
+      // const response = await axios.get(urlbase[env]+url);
+      const response = await callApi(url)
       setTransactionData(response.data.result[0]);
       setTotalCount(response.data.result[1]);
 
@@ -105,6 +117,15 @@ const Transaction = () => {
   };
 
   const handleDownload = async () => {
+    const urlbase={
+      dev:process.env.REACT_APP_BASE_URL_DEV,
+      qa:process.env.REACT_APP_BASE_URL_QA,
+      SANDBOX:process.env.REACT_APP_BASE_URL_SANDBOX,
+      LIVE:process.env.REACT_APP_BASE_URL_LIVE,
+  
+  
+    }
+    const env=localStorage.getItem('env')
     const appId = localStorage.getItem('platformId');
 
     if (!appId) {
@@ -114,7 +135,7 @@ const Transaction = () => {
     try {
       setIsLoading(true);
 
-      let url = `/dashboard/${appId}/download/transactions`;
+      let url = `dashboard/${appId}/download/transactions`;
 
       const queryParams = [];
       if (status && status !== 'All') queryParams.push(`status=${status.toUpperCase()}`);
@@ -126,7 +147,8 @@ const Transaction = () => {
 
       if (queryParams.length > 0) url += `?${queryParams.join('&')}`;
 
-      const response = await axiosInstance.get(url, { responseType: 'blob' });
+      // const response = await axios.get(urlbase[env]+url, { responseType: 'blob' });
+      const response = await callApi(url, { responseType: 'blob' })
 
       const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
