@@ -88,6 +88,8 @@ getStatus()
       qa:process.env.REACT_APP_BASE_URL_QA,
       SANDBOX:process.env.REACT_APP_BASE_URL_SANDBOX,
       LIVE:process.env.REACT_APP_BASE_URL_LIVE,
+      STG_SANDBOX:process.env.REACT_APP_BASE_URL_STG_SANDBOX,
+      STG_LIVE:process.env.REACT_APP_BASE_URL_STG_LIVE,
 
 
     }
@@ -145,7 +147,7 @@ getStatus()
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className='form' onSubmit={handleSubmit}>
       <div className='mb-3'>
         <label htmlFor="publicKey">Public Key</label>
         <input
@@ -182,8 +184,10 @@ getStatus()
         <option value=''>Select</option>
           <option value='dev'>DEV</option>
           <option value='qa'>QA</option>
-          <option value='SANDBOX'>STAGGE SANDBOX</option>
-          <option value='LIVE'>STAGE LIVE</option>
+          <option value='STG_SANDBOX'>Stage SANDBOX</option>
+          <option value='STG_LIVE'>Stage  LIVE</option>
+          <option value='SANDBOX'>Live SANDBOX</option>
+          <option value='LIVE'> LIVE</option>
 
 
         </select>

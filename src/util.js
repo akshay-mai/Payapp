@@ -1,5 +1,5 @@
 import axios from "axios";
-import { axiosInstance, axiosInstanceDEV, axiosInstanceLIVE, axiosInstanceQA, axiosInstanceSANDBOX } from "./api";
+import { axiosInstance, axiosInstanceDEV, axiosInstanceLIVE, axiosInstanceQA, axiosInstanceSANDBOX, axiosInstanceSTGLIVE, axiosInstanceSTGSANDBOX } from "./api";
 
 async function getStatusById(id, headers) {
   const urlbase={
@@ -7,6 +7,8 @@ async function getStatusById(id, headers) {
     qa:process.env.REACT_APP_BASE_URL_QA,
     SANDBOX:process.env.REACT_APP_BASE_URL_SANDBOX,
     LIVE:process.env.REACT_APP_BASE_URL_LIVE,
+    STG_SANDBOX:process.env.REACT_APP_BASE_URL_STG_SANDBOX,
+    STG_LIVE:process.env.REACT_APP_BASE_URL_STG_LIVE,
 
 
   }
@@ -23,19 +25,27 @@ async function getStatusById(id, headers) {
   }
 
 
-  function callApi(url,payload={}){
+  function callApi(url,payload={},headers={}){
 const env=localStorage.getItem('env')
-if(env=='dev'){
+console.log({headers},env)
+
+if(env=='dev'){ 
 if(Object.keys(payload).length!=0){
-  return axiosInstanceDEV.post(url,payload)
+  return axiosInstanceDEV.post(url,payload,headers)
 
 }
   return axiosInstanceDEV(url)
   
 }else if(env=='qa'){
   if(Object.keys(payload).length!=0){
-    return axiosInstanceQA.post(url,payload)
+    console.log({headers})
+    return axiosInstanceQA.post(url,payload,headers) 
   
+  }else if(Object.keys(headers).length!=0){
+    console.log('from utils',{headers})
+
+  return axiosInstanceQA(url,{...headers})
+
   }
   return axiosInstanceQA(url)
 
@@ -55,6 +65,22 @@ if(Object.keys(payload).length!=0){
   }
   
   return axiosInstanceLIVE(url)
+
+}else if(env=='STG_LIVE'){
+  if(Object.keys(payload).length!=0){
+    return axiosInstanceSTGLIVE.post(url,payload)
+  
+  }
+  
+  return axiosInstanceSTGLIVE(url)
+
+}else if(env=='STG_SANDBOX'){
+  if(Object.keys(payload).length!=0){
+    return axiosInstanceSTGSANDBOX.post(url,payload)
+  
+  }
+  
+  return axiosInstanceSTGSANDBOX(url)
 
 }
   }

@@ -54,6 +54,9 @@ const createAxiosInstance = (baseURL) => {
           if (refreshToken) {
             const headers = {
               Authorization: refreshToken,
+              accessKey:localStorage.getItem('publicKey'),
+              secretKey: localStorage.getItem('secretKey'),
+              "Content-Type":'application/json'
             };
             refreshingToken = true;
             console.log({config})
@@ -77,6 +80,11 @@ const createAxiosInstance = (baseURL) => {
 
       if (accessToken) {
         config.headers["Authorization"] = "Bearer " + accessToken;
+        config.headers["accessKey"]=localStorage.getItem('publicKey')
+        config.headers['secretKey']=localStorage.getItem('secretKey')
+        config.headers["Content-Type"]='application/json'
+
+       
       }
 
       return config;
@@ -105,6 +113,9 @@ const createAxiosInstance = (baseURL) => {
                   headers: {
                     Authorization: getRefreshToken(),
                     'Content-Type': 'application/json',
+                    accessKey:localStorage.getItem('publicKey'),
+                    secretKey: localStorage.getItem('secretKey'),
+                     "Content-Type":'application/json'
                   },
                 }
               );
@@ -131,6 +142,9 @@ const createAxiosInstance = (baseURL) => {
             return new Promise((resolve) => {
               subscribeTokenRefresh((token) => {
                 originalRequest.headers['Authorization'] = 'Bearer ' + token;
+                originalRequest.headers["accessKey"]=localStorage.getItem('publicKey')
+                originalRequest.headers['secretKey']=localStorage.getItem('secretKey')
+                originalRequest.headers["Content-Type"]='application/json'
                 resolve(instance(originalRequest));
               });
             });
@@ -164,6 +178,8 @@ export const axiosInstanceDEV = createAxiosInstance(process.env.REACT_APP_BASE_U
 export const axiosInstanceQA = createAxiosInstance(process.env.REACT_APP_BASE_URL_QA);
 export const axiosInstanceSANDBOX = createAxiosInstance(process.env.REACT_APP_BASE_URL_SANDBOX);
 export const axiosInstanceLIVE = createAxiosInstance(process.env.REACT_APP_BASE_URL_LIVE);
+export const axiosInstanceSTGLIVE = createAxiosInstance(process.env.REACT_APP_BASE_URL_STG_LIVE);
+export const axiosInstanceSTGSANDBOX = createAxiosInstance(process.env.REACT_APP_BASE_URL_STG_SANDBOX);
 
 
 function getUrl(){

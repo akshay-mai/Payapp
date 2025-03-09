@@ -37,6 +37,18 @@ const SecondPage = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState(null); 
   const [allPaymentMethod, setAllPaymentMethod] = React.useState([]); 
   const[selectedProduct,setSelectedroduct]=React.useState(null)
+  const[gatewayDetails,setGatewayDetails]=React.useState(null)
+  const url={
+    dev:process.env.REACT_APP_BASE_URL_DEV,
+    qa:process.env.REACT_APP_BASE_URL_QA,
+    SANDBOX:process.env.REACT_APP_BASE_URL_SANDBOX,
+    LIVE:process.env.REACT_APP_BASE_URL_LIVE,
+    STG_SANDBOX:process.env.REACT_APP_BASE_URL_STG_SANDBOX,
+    STG_LIVE:process.env.REACT_APP_BASE_URL_STG_LIVE,
+
+
+  }
+
   const[sign,setSign]=React.useState('')
   const navigate=useNavigate()
 
@@ -107,18 +119,30 @@ const SecondPage = () => {
     }
 
   }
- const getSignature=async ()=>{
-    let payload={
+  const getSignature=async ()=>{
+    let headers={
       "accessKey": localStorage.getItem('publicKey'),
        "secretKey": localStorage.getItem('secretKey')
    }
+   let payload={
+    
+      currencyId:selectedCurrency.id,
+      paymentMethodId:selectedPaymentMethod,
+      amount:selectedProduct,
+      referenceNumber: generateRandomString(),
+      appId:localStorage.getItem('appId'),
+      redirectUrl:`${window.location.origin}/success`
+  
+   }
     try{
 
-      // let res= await axios.post(`${urlbase[env]}auth/generate-signature/${localStorage.getItem('appId')}`,payload)
-      let res =await callApi(`auth/generate-signature/${localStorage.getItem('appId')}`,payload)
-      // console.log({res})
+    
+      // let res =await callApi(`auth/generate-signature/${localStorage.getItem('appId')}`,payload)
+      let res =await callApi(`transaction/initiate`,payload,headers)
+
       
       
+      localStorage.setItem('sign',res?.data?.result)
 
         setSign(res?.data?.result)
         // console.log('hello')
@@ -146,14 +170,48 @@ const SecondPage = () => {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
-          transition: Bounce,
+          theme: "light",  
+          transition: Bounce,  
           // onClose:()=>window.location.reload()
           });
       }
-    }
+    } 
 
   } 
+
+  const processOrder=async()=>{
+let headers={
+  "x-signature":sign
+} 
+try{ 
+
+  let res=await axios.post(`${url[env]}transaction/process`,{},{headers})
+  console.log(res)
+
+    setGatewayDetails(res?.data?.result)
+  
+
+}catch(e){
+  console.log(e)
+  if(typeof e !=='string'){
+  
+    toast.error(e?.response?.data?.message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+      // onClose:()=>window.location.reload()
+      });
+  }
+
+}
+  }
+  
 
   React.useEffect(()=>{
     getCurrecny()
@@ -166,6 +224,10 @@ const SecondPage = () => {
   },[selectedCurrency])
   useEffect(()=>{
 console.log(sign)
+if(sign){
+
+  processOrder()
+}
   },[sign])
 
   const handleCurrencyChange = (e) => {
@@ -175,6 +237,7 @@ console.log(sign)
   };
 
   const handlePaymentMethodChange = (e) => {
+    console.log(e.target.value)
     setSelectedPaymentMethod(e.target.value);
   };
 
@@ -191,21 +254,7 @@ console.log(sign)
       alert('Please select all details.');
     }
   };
-  // const payload = {
-  //   referenceNumber: "REFRENCE_NUMBER",
-  //   amount: "AMOUNT",
-  //   currencyId: "CURRENCY_ID",
-  //   paymentMethodId: "PAYMENT_METHOD_ID"
-  // };
 
-  // const headers = {
-  //   x-signature: "YOUR_APP_SIGNATURE",
-  //   environment: "URL"
-  // };
-
-  // const transactionStatusCallback = (payload) => {
-  //   setTransactionPayload(payload);
-  // };
   const mainPayload = {
     referenceNumber: generateRandomString(),
     amount: Number(selectedProduct),
@@ -224,9 +273,12 @@ console.log(sign)
     return result;
   }
   const transactionStatusCallback = (payload) => {
+    console.log(payload)
     // console.log('payload ::: from main call back', payload);
     navigate('/success',{state:payload})
-    window.location.href=`/success?payload=${JSON.stringify(payload)}`
+
+    // window.location.href=`/success?payload=${JSON.stringify(payload)}`
+    
   };
 
   const getEnvironmentUrl = (env) => {
@@ -278,7 +330,7 @@ const headers = {
         ))}
       </div>
 
-      {/* <div className="payment-method-container">
+      <div className="payment-method-container">
         <label>Select Payment Method: </label>
         <select value={selectedPaymentMethod} onChange={handlePaymentMethodChange} className="payment-method-dropdown">
           <option value="">-- Select Payment Method --</option>
@@ -288,7 +340,7 @@ const headers = {
             )
           }
         </select>
-      </div> */}
+      </div>
 
 
 
@@ -331,16 +383,11 @@ const headers = {
       <button onClick={handleCheckout} className="checkout-button">
         Checkout
       </button>
-      {/* {sign? <div>hello</div>:<div>bye</div>} */}
      
-
       {
-      //   // sign && React.createElement(Gateways,{payload:payload,headers:headers,transactionStatusCallback:transactionStatusCallback}) 
-        sign &&  <Gateways  payload={mainPayload} headers={headers} transactionStatusCallback={transactionStatusCallback}/>
+        gatewayDetails &&  Object.keys(gatewayDetails).length!=0 &&  <Gateways  payload={gatewayDetails} />
       }
-      {/* {
-        sign && console.log('hello 1')
-      } */}
+     
     </div>
   );
 };
